@@ -1,0 +1,25 @@
+{
+    "text": {
+        "color" : "#000",
+        "fontsize": 13,
+        "fontbold": "bold"
+    },
+    "title": {
+        "color": "#000",
+        "fontsize": 19,
+        "fontbold": "bold",
+        "family" : "monospace"
+    },
+    "container": {
+        "background": "#fff"
+    },
+    "border": {
+        "radius": 10,
+        "color": "#f33",
+        "width": 1
+    },
+    "primary": {
+        "color": "#fff",
+        "background": "#292524"
+    }
+}
