@@ -1,4 +1,4 @@
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import {View, Text, Image, TouchableOpacity, FlatList} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -11,6 +11,7 @@ import { Context } from '../../App'
 
 export default function Carrinho ({navigation, route}) {
     const { nomeProduto, setNomeProduto } = useContext (Context)
+    const [ custoTotal, setCustoTotal ] = useState (0)
 
     const { params } = route
 
@@ -18,7 +19,7 @@ export default function Carrinho ({navigation, route}) {
         try {
             const produtosComprados = nomeProduto
             await AsyncStorage.setItem ('produtos', JSON.stringify(produtosComprados))
-            alert ('Compra feita!')
+            alert (`Obrigado, total de: ${custoTotal},00 kz`)
         } catch (error) {
             
         }
@@ -30,7 +31,18 @@ export default function Carrinho ({navigation, route}) {
     const removerProduto = ({produto}) => {
         const produtosCarrinho = nomeProduto.filter (produtoCar => produtoCar.produto.id !== produto.id)
         setNomeProduto (produtosCarrinho)
-    } 
+    }
+    
+    useEffect ( () => {
+
+        var copitaCusto = 0
+
+        nomeProduto.map ( ({produto: {custo}}) => {
+            copitaCusto= copitaCusto+custo
+        }) 
+
+        setCustoTotal (copitaCusto)
+    }, [nomeProduto] )
 
     
 
@@ -46,8 +58,10 @@ export default function Carrinho ({navigation, route}) {
                 <TouchableOpacity activeOpacity={.5} style={tema.produtoNoCarrinho}>
                    <Image source={{uri: item.produto.url}} style={tema.imageProdutoCarrinho} />
                     <Text numberOfLines={1} style={tema.titleCarrrinho}>{item.produto.nomeCompleto}</Text>
+                    <Text style={[tema.textCarrinho,{ color: 'green'}]}>{item.produto.custo},00 Kz</Text>
                     <Text style={tema.textCarrinho}>{item.produto.quantidade}</Text>
-                    <Text style={tema.textCarrinho}>{item.produto.valor} Kz</Text>
+                    <Text style={tema.textCarrinho}>{item.produto.valor},00 Kz</Text>
+                    
 
                     <TouchableOpacity
                     onPress={()=> {removerProduto ({produto: item.produto})}} 
@@ -61,6 +75,8 @@ export default function Carrinho ({navigation, route}) {
             :<Text style={tema.text}>Sem produtos no carrinho</Text>
             
         }
+
+        <Text style={{fontSize: 24, color: 'green'}}>Total: {custoTotal},00 kz</Text>
 
             {Boolean (nomeProduto.length)?
                 <TouchableOpacity style={tema.button} onPress={finalizarCompra}>

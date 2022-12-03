@@ -8,13 +8,13 @@
         "color": "#000",
         "fontsize": 19,
         "fontbold": "bold",
-        "family" : "monospace"
+        "family" : "normal"
     },
     "container": {
         "background": "#fff"
     },
     "border": {
-        "radius": 10,
+        "radius": 7,
         "color": "#f33",
         "width": 1
     },

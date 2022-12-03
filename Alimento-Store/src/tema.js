@@ -56,7 +56,7 @@ export default StyleSheet.create ({
         resizeMode: 'cover',
         width: width,
         height: 300,
-        marginTop: -width/25
+        marginTop: -width/20
     },
     hr: {
         borderBottomColor: 'rgba(0,0,0,0.2)',

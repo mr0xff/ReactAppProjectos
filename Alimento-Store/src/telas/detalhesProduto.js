@@ -1,4 +1,4 @@
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import {View, Text, Image, TouchableOpacity} from 'react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Icon from 'react-native-vector-icons/Ionicons'
@@ -11,6 +11,13 @@ export default function Detalhesdoproduto ({navigation, route}) {
     const { nomeProduto, setNomeProduto } = useContext (Context)
     const { params } = route
     const [ quantidadeDoProduto, setQuantidadeDoProduto ] = useState (params.quantidade)
+    const [ totalProduto, setTotalProduto ] = useState (params.quantidade*params.valor)
+    const { valor } = params
+
+    useEffect ( () => {
+        setTotalProduto (quantidadeDoProduto*valor) 
+         
+    },[quantidadeDoProduto])
 
     const maisProduto = () => {
         setQuantidadeDoProduto (quantidadeDoProduto+1)
@@ -18,33 +25,19 @@ export default function Detalhesdoproduto ({navigation, route}) {
 
     const menosProduto = () => {
         if (quantidadeDoProduto>1)
-            setQuantidadeDoProduto (quantidadeDoProduto-1)
+            {
+                setQuantidadeDoProduto (quantidadeDoProduto-1)
+            }
         else
             alert ('Leve pelo menos 1 item!')
     }
 
-    /*const adicionarProdutosCarrinho = ({produto}) => {
-        produto.quantidade = quantidadeDoProduto
-        armazenarProdutosCarrinho ({produtos: produto})
-    } */
-
     const adicionarProdutosCarrinho = () => {
         params.quantidade = quantidadeDoProduto
+        params.custo = totalProduto
         setNomeProduto ([...nomeProduto, {produto: params}])
         alert ('Produto Adicionado com sucesso !')
     }
-
-    //AsyncStorage
-
-    const armazenarProdutosCarrinho = async ({produtos}) => {
-        
-        try {
-            await AsyncStorage.setItem(produtos.nome, JSON.stringify (produtos))
-            alert ('Produto Adicionado com sucesso!')
-        } catch (e) {
-            console.log ('Falha', JSON.stringify(e))
-        }
-      }
 
     return (
         <View style={tema.container}>
@@ -67,8 +60,17 @@ export default function Detalhesdoproduto ({navigation, route}) {
                 marginLeft: 7, 
                 marginTop: 7,
                 fontSize: 18
-                }]}>Preço: {params.valor} kz</Text>
+                }]}>Preço: {params.valor},00 kz</Text>
 
+            <Text 
+            style={[tema.title, {
+                alignSelf: 'center', 
+                marginLeft: 7, 
+                marginTop: 0,
+                fontSize: 18,
+                color: "green"
+                }]}>Custo:{totalProduto},00 kz</Text>
+                
             <View style={tema.buttonMaisMenus}>
                 <TouchableOpacity onPress={menosProduto}>
                     <Icon name="remove-circle-outline" size={30} color={tema.quantidade.color} />
